@@ -18,6 +18,7 @@ import Network.Wai.Handler.Warp (
 import Network.Wai.Logger (withStdoutLogger)
 import Options.Applicative qualified as Options
 import System.Exit (die)
+import System.IO (hFlush, stdout)
 import Types (ServerOptions(ServerOptions, port), Env(Env, options, status))
 
 main :: IO ()
@@ -25,6 +26,7 @@ main = do
   serverOptions@ServerOptions {port} <- Options.execParser opts
   withStdoutLogger $ \logger -> do
     putStrLn $ "Plutip server starting on port " <> show port
+    hFlush stdout
     runSettings (mkSettings port logger)
       . app
       =<< either die pure
