@@ -47,7 +47,7 @@ import System.Directory (doesFileExist)
 import System.FilePath (replaceFileName)
 import Test.Plutip.Config (relayNodeLogs, chainIndexPort)
 import Test.Plutip.Internal.BotPlutusInterface.Setup (keysDir)
-import Test.Plutip.Internal.BotPlutusInterface.Wallet (BpiWallet(signKey))
+import Test.Plutip.Internal.BotPlutusInterface.Wallet (BpiWallet(signKey, vrfKey))
 import Test.Plutip.Internal.BotPlutusInterface.Wallet (addSomeWallet)
 import Test.Plutip.Internal.Types (ClusterEnv(runningNode))
 
@@ -73,6 +73,7 @@ startClusterHandler
   let nodeConfigPath = getNodeConfigFile clusterEnv
   -- safeguard against directory tree structure changes
   unlessM (liftIO $ doesFileExist nodeConfigPath) $ throwError NodeConfigNotFound
+  liftIO $ print $ getWalletVrfKey <$> snd res
   pure $ ClusterStartupSuccess
     { privateKeys = getWalletPrivateKey <$> snd res
     , nodeSocketPath = getNodeSocketFile clusterEnv
@@ -94,6 +95,8 @@ startClusterHandler
       flip replaceFileName "node.config" . getNodeSocketFile
     getWalletPrivateKey :: BpiWallet -> PrivateKey
     getWalletPrivateKey = Text.decodeUtf8 . Base16.encode . serialiseToCBOR . signKey
+    getWalletVrfKey :: BpiWallet -> PrivateKey
+    getWalletVrfKey = Text.decodeUtf8 . Base16.encode . serialiseToCBOR . vrfKey
     interpret = fmap (either ClusterStartupFailure id) . runExceptT
 
 stopClusterHandler :: StopClusterRequest -> AppM StopClusterResponse
