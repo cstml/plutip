@@ -75,8 +75,8 @@ startClusterHandler
   let nodeConfigPath = getNodeConfigFile clusterEnv
   -- safeguard against directory tree structure changes
   unlessM (liftIO $ doesFileExist nodeConfigPath) $ throwError NodeConfigNotFound
-  liftIO $ print $ getWalletVrfKey <$> snd res
-  liftIO $ hFlush stdout
+  -- liftIO $ print $ getWalletVrfKey <$> snd res
+  -- liftIO $ hFlush stdout
   pure $ ClusterStartupSuccess
     { privateKeys = getWalletPrivateKey <$> snd res
     , publicKeys = [] -- getWalletVrfKey <$> snd res
