@@ -18,6 +18,7 @@ module Types
     , keysDirectory
     , nodeSocketPath
     , privateKeys
+    , publicKeys
     , nodeConfigPath
     )
   , StopClusterRequest(StopClusterRequest)
@@ -110,6 +111,7 @@ data StartClusterResponse
   = ClusterStartupFailure ClusterStartupFailureReason
   | ClusterStartupSuccess
     { privateKeys :: [PrivateKey]
+    , publicKeys :: [Text]
     , nodeSocketPath :: FilePath
     , nodeConfigPath :: FilePath
     , keysDirectory :: FilePath
