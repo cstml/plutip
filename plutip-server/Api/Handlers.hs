@@ -46,6 +46,7 @@ import Data.Text.Encoding qualified as Text
 import Data.Traversable (for)
 import System.Directory (doesFileExist)
 import System.FilePath (replaceFileName)
+import System.IO (hFlush, stdout)
 import Test.Plutip.Config (relayNodeLogs, chainIndexPort)
 import Test.Plutip.Internal.BotPlutusInterface.Setup (keysDir)
 import Test.Plutip.Internal.BotPlutusInterface.Wallet (BpiWallet(signKey, vrfKey))
@@ -75,6 +76,7 @@ startClusterHandler
   -- safeguard against directory tree structure changes
   unlessM (liftIO $ doesFileExist nodeConfigPath) $ throwError NodeConfigNotFound
   liftIO $ print $ getWalletVrfKey <$> snd res
+  liftIO $ hFlush stdout
   pure $ ClusterStartupSuccess
     { privateKeys = getWalletPrivateKey <$> snd res
     , publicKeys = [] -- getWalletVrfKey <$> snd res
