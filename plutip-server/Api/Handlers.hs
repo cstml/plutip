@@ -77,7 +77,7 @@ startClusterHandler
   liftIO $ print $ getWalletVrfKey <$> snd res
   pure $ ClusterStartupSuccess
     { privateKeys = getWalletPrivateKey <$> snd res
-    , publicKeys = getWalletVrfKey <$> snd res
+    , publicKeys = [] -- getWalletVrfKey <$> snd res
     , nodeSocketPath = getNodeSocketFile clusterEnv
     , nodeConfigPath = nodeConfigPath
     , keysDirectory = keysDir clusterEnv
